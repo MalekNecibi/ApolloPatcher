@@ -22,6 +22,16 @@ static NSString *kClientID;
 @property(copy, nonatomic) NSURL *URL;
 @end
 
+@interface RDKComment
+{
+    NSDate *_createdUTC;
+    NSString *_linkID;
+}
+- (id)linkIDWithoutTypePrefix;
+@property(copy, nonatomic) NSString *body;
+@property(readonly, nonatomic) NSDictionary *mediaMetadata;
+@end
+
 @class _TtC6Apollo14LinkButtonNode;
 
 static UIAlertController *alertController;
