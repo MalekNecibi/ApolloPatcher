@@ -5,6 +5,18 @@ static NSString *randomUserAgent = [NSString stringWithFormat:@"iOS: com.%@.%@ v
 // Memo iPad6 17.5.1
 // Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15
 %group CustomID
+// Reddit API can returns "error" as a dict (e.g. {"reason":"UNAUTHORIZED",...})
+// instead of a numeric code. Multiple Apollo code paths call [dict[@"error"] integerValue]
+// on the response, including unhookable block invokes. Adding integerValue to NSDictionary
+// prevents the unrecognized selector crash everywhere; returning 0 means no error code
+// matches, so normal error handling proceeds.
+%hook NSDictionary
+%new
+- (NSInteger)integerValue {
+    return 0;
+}
+%end
+
 %hook RDKOAuthCredential
 // reddit client id
 - (id)clientIdentifier {
